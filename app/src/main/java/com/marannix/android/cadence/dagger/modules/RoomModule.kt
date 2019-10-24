@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [RepositoryModule::class])
+@Module
 class RoomModule {
 
     /**
