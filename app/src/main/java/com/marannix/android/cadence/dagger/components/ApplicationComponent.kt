@@ -2,9 +2,7 @@ package com.marannix.android.cadence.dagger.components
 
 import android.app.Application
 import com.marannix.android.cadence.MainApplication
-import com.marannix.android.cadence.dagger.modules.ActivityBuilder
-import com.marannix.android.cadence.dagger.modules.ApiModule
-import com.marannix.android.cadence.dagger.modules.RoomModule
+import com.marannix.android.cadence.dagger.modules.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -16,6 +14,8 @@ import javax.inject.Singleton
     modules = [ActivityBuilder::class,
         ApiModule::class,
         RoomModule::class,
+        ViewModelModule::class,
+        ApplicationModule::class,
         AndroidSupportInjectionModule::class]
 )
 interface ApplicationComponent : AndroidInjector<MainApplication> {

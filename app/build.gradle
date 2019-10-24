@@ -52,4 +52,7 @@ dependencies {
     // ROOM
     implementation "androidx.room:room-runtime:2.2.0"
     kapt "android.arch.persistence.room:compiler:1.1.1"
+
+    // LIFECYCLE
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
