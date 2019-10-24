@@ -1,7 +1,9 @@
 package com.marannix.android.cadence.activity
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,8 +11,10 @@ import com.marannix.android.cadence.R
 import com.marannix.android.cadence.adapter.GithubRepoAdapter
 import com.marannix.android.cadence.model.GitHubRepoModel
 import com.marannix.android.cadence.model.GitHubRepoState
+import com.marannix.android.cadence.util.Utils
 import com.marannix.android.cadence.viewmodel.GithubRepoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.github_repo_loading_state.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -36,25 +40,23 @@ class MainActivity : BaseActivity() {
         updateUI()
     }
 
+    private fun retrieveGithubRepos() {
+        viewModel.storeGithubRepos()
+        liveData = viewModel.getListOfGithubRepo()
+    }
+
     private fun initAdapter() {
         githubRepoAdapter = GithubRepoAdapter()
         githubRepoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         githubRepoRecyclerView.adapter = githubRepoAdapter
     }
 
-    private fun retrieveGithubRepos() {
-        viewModel.storeGithubRepos()
-        liveData = viewModel.getListOfGithubRepo()
-    }
-
     private fun updateUI() {
         viewModel.state.observe(this, Observer {
             when (it) {
-                GitHubRepoState.Loading -> {
-                    Log.d("Loading", "Content")
-                }
+                GitHubRepoState.Loading -> { displayLoading() }
                 is GitHubRepoState.Success -> {
-                    Log.d("Success", "Data")
+                    displaySuccess()
                     liveData.observe(this, Observer { model ->
                         githubRepoAdapter.setData(model)
                     })
@@ -63,10 +65,11 @@ class MainActivity : BaseActivity() {
                     liveData.observe(this, Observer { model ->
                         when {
                             !model.isNullOrEmpty() -> {
+                                displaySuccess()
                                 githubRepoAdapter.setData(model)
-                                Log.d("Error", "data")
                             }
-                            else -> { displayError() }
+                            else -> { Utils.delayFunction({ displayError() }, 2000)
+                            }
                         }
                     })
                 }
@@ -74,8 +77,19 @@ class MainActivity : BaseActivity() {
         })
     }
 
+    private fun displaySuccess() {
+        loadingAnimation.visibility = View.GONE
+        errorAnimation.visibility = View.GONE
+    }
+
+    private fun displayLoading() {
+        loadingAnimation.visibility = View.VISIBLE
+        errorAnimation.visibility = View.GONE
+    }
+
     private fun displayError() {
-        Log.d("Error", "No data")
+        loadingAnimation.visibility = View.GONE
+        errorAnimation.visibility = View.VISIBLE
     }
 
 }

@@ -11,4 +11,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+    <include layout="@layout/github_repo_loading_state"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
