@@ -15,11 +15,7 @@ class GithubRepoViewModel @Inject constructor(
        githubRepoRepository.storeGithubRepos()
     }
 
-    fun getLiveData() : MutableLiveData<List<GitHubRepoModel>> {
-        return githubRepoRepository.getLiveData()
-    }
-
-    fun getStoredGithubRepos(): LiveData<List<GitHubRepoModel>> {
+    fun getLiveData(): LiveData<List<GitHubRepoModel>> {
         return githubRepoRepository.getGithubRepos()
     }
 }

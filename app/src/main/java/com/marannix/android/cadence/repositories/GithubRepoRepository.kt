@@ -18,7 +18,7 @@ class GithubRepoRepository @Inject constructor(
     private val githubRepoApi: GithubRepoApi
 ) {
 
-    private var liveData: MutableLiveData<List<GitHubRepoModel>> = MutableLiveData()
+    private var liveData = MutableLiveData<List<GitHubRepoModel>>()
     private val disposables = CompositeDisposable()
 
     fun storeGithubRepos() {
@@ -29,13 +29,10 @@ class GithubRepoRepository @Inject constructor(
                 { repos ->
                     githubRepoDao.insertGithubRepos(repos)
                     updateLiveData(repos)
-                }
-                ,
-                {
+                }, {
                     // TODO: Think of a suitable error
                     Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 })
-
         disposables.add(disposable)
     }
 
@@ -47,7 +44,4 @@ class GithubRepoRepository @Inject constructor(
         return githubRepoDao.getAllGithubRepos()
     }
 
-    fun getLiveData(): MutableLiveData<List<GitHubRepoModel>> {
-        return liveData
-    }
 }
