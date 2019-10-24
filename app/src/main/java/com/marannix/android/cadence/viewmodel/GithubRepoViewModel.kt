@@ -18,11 +18,7 @@ class GithubRepoViewModel @Inject constructor(
     private val disposables = CompositeDisposable()
     var state = MutableLiveData<GitHubRepoState>()
 
-    fun getListOfGithubRepo(): LiveData<List<GitHubRepoModel>> {
-        return githubRepoUseCase.getStoredGithubRepos()
-    }
-
-    fun storeGithubRepos() {
+    fun storeGithubRepos()  {
         disposables.add(githubRepoUseCase.handleGitHubRepoState()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -32,8 +28,12 @@ class GithubRepoViewModel @Inject constructor(
         )
     }
 
+    fun getLiveData() : LiveData<List<GitHubRepoModel>> {
+        return githubRepoUseCase.getLiveData()
+    }
+
     private fun handleState(githubRepoState: GitHubRepoState) {
-        state.value = githubRepoState
+        state.postValue(githubRepoState)
     }
 
     override fun onCleared() {

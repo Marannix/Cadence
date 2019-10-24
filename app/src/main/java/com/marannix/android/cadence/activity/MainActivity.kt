@@ -1,8 +1,6 @@
 package com.marannix.android.cadence.activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,7 +9,6 @@ import com.marannix.android.cadence.R
 import com.marannix.android.cadence.adapter.GithubRepoAdapter
 import com.marannix.android.cadence.model.GitHubRepoModel
 import com.marannix.android.cadence.model.GitHubRepoState
-import com.marannix.android.cadence.util.Utils
 import com.marannix.android.cadence.viewmodel.GithubRepoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.github_repo_loading_state.*
@@ -42,7 +39,7 @@ class MainActivity : BaseActivity() {
 
     private fun retrieveGithubRepos() {
         viewModel.storeGithubRepos()
-        liveData = viewModel.getListOfGithubRepo()
+        liveData = viewModel.getLiveData()
     }
 
     private fun initAdapter() {
@@ -54,7 +51,9 @@ class MainActivity : BaseActivity() {
     private fun updateUI() {
         viewModel.state.observe(this, Observer {
             when (it) {
-                GitHubRepoState.Loading -> { displayLoading() }
+                GitHubRepoState.Loading -> {
+                    displayLoading()
+                }
                 is GitHubRepoState.Success -> {
                     displaySuccess()
                     liveData.observe(this, Observer { model ->
@@ -68,7 +67,8 @@ class MainActivity : BaseActivity() {
                                 displaySuccess()
                                 githubRepoAdapter.setData(model)
                             }
-                            else -> { Utils.delayFunction({ displayError() }, 2000)
+                            else -> {
+                                 displayError()
                             }
                         }
                     })
@@ -91,5 +91,4 @@ class MainActivity : BaseActivity() {
         loadingAnimation.visibility = View.GONE
         errorAnimation.visibility = View.VISIBLE
     }
-
 }

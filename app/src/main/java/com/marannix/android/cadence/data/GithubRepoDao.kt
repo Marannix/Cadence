@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.marannix.android.cadence.model.GitHubRepoModel
+import io.reactivex.Single
 
 @Dao
 interface GithubRepoDao {
@@ -14,5 +15,5 @@ interface GithubRepoDao {
     fun insertGithubRepos(githubRepos: List<GitHubRepoModel>)
 
     @Query("select * from repos")
-    fun getAllGithubRepos(): LiveData<List<GitHubRepoModel>>
+    fun getGithubRepos(): Single<List<GitHubRepoModel>>
 }
