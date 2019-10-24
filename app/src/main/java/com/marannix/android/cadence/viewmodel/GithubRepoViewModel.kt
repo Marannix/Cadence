@@ -1,6 +1,7 @@
 package com.marannix.android.cadence.viewmodel
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,13 +15,11 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class GithubRepoViewModel @Inject constructor(
-    private val githubRepoUseCase: GithubRepoUseCase,
-    private val context: Context
+    private val githubRepoUseCase: GithubRepoUseCase
 ) : ViewModel() {
 
-    var repos = MutableLiveData<List<GitHubRepoModel>>()
     private val disposables = CompositeDisposable()
-    private lateinit var state: GitHubRepoState
+    var state = MutableLiveData<GitHubRepoState>()
 
     fun getListOfGithubRepo(): LiveData<List<GitHubRepoModel>> {
         return githubRepoUseCase.getStoredGithubRepos()
@@ -37,15 +36,7 @@ class GithubRepoViewModel @Inject constructor(
     }
 
     private fun handleState(githubRepoState: GitHubRepoState) {
-        state = githubRepoState
-        when (githubRepoState) {
-            is GitHubRepoState.Success -> {
-                repos.value = githubRepoState.gitHubRepoModel
-            }
-            is GitHubRepoState.Error -> {
-                Toast.makeText(context, githubRepoState.cause.message, Toast.LENGTH_SHORT).show()
-            }
-        }
+        state.value = githubRepoState
     }
 
     override fun onCleared() {

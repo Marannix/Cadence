@@ -1,12 +1,14 @@
 package com.marannix.android.cadence.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.marannix.android.cadence.R
 import com.marannix.android.cadence.adapter.GithubRepoAdapter
 import com.marannix.android.cadence.model.GitHubRepoModel
+import com.marannix.android.cadence.model.GitHubRepoState
 import com.marannix.android.cadence.viewmodel.GithubRepoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -46,10 +48,34 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateUI() {
-        liveData.observe(this, Observer {
-            if (!it.isNullOrEmpty()) {
-                githubRepoAdapter.setData(it)
+        viewModel.state.observe(this, Observer {
+            when (it) {
+                GitHubRepoState.Loading -> {
+                    Log.d("Loading", "Content")
+                }
+                is GitHubRepoState.Success -> {
+                    Log.d("Success", "Data")
+                    liveData.observe(this, Observer { model ->
+                        githubRepoAdapter.setData(model)
+                    })
+                }
+                is GitHubRepoState.Error -> {
+                    liveData.observe(this, Observer { model ->
+                        when {
+                            !model.isNullOrEmpty() -> {
+                                githubRepoAdapter.setData(model)
+                                Log.d("Error", "data")
+                            }
+                            else -> { displayError() }
+                        }
+                    })
+                }
             }
         })
     }
+
+    private fun displayError() {
+        Log.d("Error", "No data")
+    }
+
 }
