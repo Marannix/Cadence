@@ -38,6 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/githubRepoNameLabel"/>
@@ -48,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
                 android:text="Github Repo Description: "
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/githubRepoName"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +60,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:lines="3"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/githubRepoDescriptionLabel"/>
