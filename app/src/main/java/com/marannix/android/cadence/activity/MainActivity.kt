@@ -1,7 +1,6 @@
 package com.marannix.android.cadence.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,14 +25,14 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GithubRepoViewModel::class.java)
-        viewModel.getDataFromApi()
+        viewModel.storeGithubRepos()
 
         githubRepoAdapter = GithubRepoAdapter()
 
         githubRepoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         githubRepoRecyclerView.adapter = githubRepoAdapter
 
-        liveData = viewModel.getLiveData()
+        liveData = viewModel.getListOfGithubRepo()
 
         liveData.observe(this, Observer {
             if (!liveData.value.isNullOrEmpty()) {
