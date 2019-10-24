@@ -1,6 +1,7 @@
 package com.marannix.android.cadence.repositories
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.marannix.android.cadence.api.GithubRepoApi
@@ -12,38 +13,41 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class GithubRepoRepository @Inject constructor(
-    val githubRepoDao: GithubRepoDao,
-    val githubRepoApi: GithubRepoApi
+    private val context: Context,
+    private val githubRepoDao: GithubRepoDao,
+    private val githubRepoApi: GithubRepoApi
 ) {
 
-    private var liveData: MutableLiveData<String> = MutableLiveData()
-
+    private var liveData: MutableLiveData<List<GitHubRepoModel>> = MutableLiveData()
     private val disposables = CompositeDisposable()
-
-    private fun getGithubRepos(): List<GitHubRepoModel> {
-        return githubRepoDao.getAllGithubRepos()
-    }
 
     fun storeGithubRepos() {
         val disposable = githubRepoApi.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { model ->
-                    Log.d("Yes", model[2].name)
-                    githubRepoDao.insertGithubRepos(model)
-                    liveData.value = model[1].name
+                { repos ->
+                    githubRepoDao.insertGithubRepos(repos)
+                    updateLiveData(repos)
                 }
                 ,
                 {
-                    Log.d("No", it.message!!)
+                    // TODO: Think of a suitable error
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 })
 
-        Log.d("LOL", getGithubRepos().size.toString())
         disposables.add(disposable)
     }
 
-    fun getLiveData(): MutableLiveData<String> {
+    private fun updateLiveData(repos: List<GitHubRepoModel>) {
+        liveData.value = repos
+    }
+
+    fun getGithubRepos(): LiveData<List<GitHubRepoModel>> {
+        return githubRepoDao.getAllGithubRepos()
+    }
+
+    fun getLiveData(): MutableLiveData<List<GitHubRepoModel>> {
         return liveData
     }
 }

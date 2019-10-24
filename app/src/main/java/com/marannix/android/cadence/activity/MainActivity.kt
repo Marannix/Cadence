@@ -2,22 +2,20 @@ package com.marannix.android.cadence.activity
 
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import com.marannix.android.cadence.R
+import com.marannix.android.cadence.model.GitHubRepoModel
 import com.marannix.android.cadence.viewmodel.GithubRepoViewModel
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var viewModel: GithubRepoViewModel
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var liveData: MutableLiveData<String>
+    private lateinit var viewModel: GithubRepoViewModel
+    private lateinit var liveData: MutableLiveData<List<GitHubRepoModel>>
+    private lateinit var liveDataRepo: LiveData<List<GitHubRepoModel>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +25,14 @@ class MainActivity : BaseActivity() {
         viewModel.getDataFromApi()
 
         liveData = viewModel.getLiveData()
+        liveDataRepo = viewModel.getStoredGithubRepos()
 
         liveData.observe(this, Observer {
             Log.d("LiveData2", liveData.value.toString())
+        })
+
+        liveDataRepo.observe(this, Observer {
+            Log.d("Database", liveDataRepo.value.toString())
         })
     }
 }

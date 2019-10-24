@@ -1,13 +1,10 @@
 package com.marannix.android.cadence.viewmodel
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.marannix.android.cadence.api.GithubRepoApi
+import com.marannix.android.cadence.model.GitHubRepoModel
 import com.marannix.android.cadence.repositories.GithubRepoRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class GithubRepoViewModel @Inject constructor(
@@ -18,7 +15,11 @@ class GithubRepoViewModel @Inject constructor(
        githubRepoRepository.storeGithubRepos()
     }
 
-    fun getLiveData() : MutableLiveData<String> {
+    fun getLiveData() : MutableLiveData<List<GitHubRepoModel>> {
         return githubRepoRepository.getLiveData()
+    }
+
+    fun getStoredGithubRepos(): LiveData<List<GitHubRepoModel>> {
+        return githubRepoRepository.getGithubRepos()
     }
 }
