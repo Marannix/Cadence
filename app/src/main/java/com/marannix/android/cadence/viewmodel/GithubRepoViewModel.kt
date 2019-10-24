@@ -20,6 +20,7 @@ class GithubRepoViewModel @Inject constructor(
 
     var repos = MutableLiveData<List<GitHubRepoModel>>()
     private val disposables = CompositeDisposable()
+    private lateinit var state: GitHubRepoState
 
     fun getListOfGithubRepo(): LiveData<List<GitHubRepoModel>> {
         return githubRepoUseCase.getStoredGithubRepos()
@@ -29,19 +30,20 @@ class GithubRepoViewModel @Inject constructor(
         disposables.add(githubRepoUseCase.handleGitHubRepoState()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                handleState(it)
+            .subscribe { githubRepoState ->
+                handleState(githubRepoState)
             }
         )
     }
 
-    private fun handleState(it: GitHubRepoState) {
-        when (it) {
+    private fun handleState(githubRepoState: GitHubRepoState) {
+        state = githubRepoState
+        when (githubRepoState) {
             is GitHubRepoState.Success -> {
-                repos.value = it.gitHubRepoModel
+                repos.value = githubRepoState.gitHubRepoModel
             }
             is GitHubRepoState.Error -> {
-                Toast.makeText(context, it.cause.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, githubRepoState.cause.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

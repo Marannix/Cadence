@@ -47,8 +47,8 @@ class MainActivity : BaseActivity() {
 
     private fun updateUI() {
         liveData.observe(this, Observer {
-            if (!liveData.value.isNullOrEmpty()) {
-                githubRepoAdapter.setData(liveData.value!!)
+            if (!it.isNullOrEmpty()) {
+                githubRepoAdapter.setData(it)
             }
         })
     }
