@@ -23,17 +23,29 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(GithubRepoViewModel::class.java)
+        init()
+    }
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GithubRepoViewModel::class.java)
-        viewModel.storeGithubRepos()
+    private fun init() {
+        retrieveGithubRepos()
+        initAdapter()
+        updateUI()
+    }
 
+    private fun initAdapter() {
         githubRepoAdapter = GithubRepoAdapter()
-
         githubRepoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         githubRepoRecyclerView.adapter = githubRepoAdapter
+    }
 
+    private fun retrieveGithubRepos() {
+        viewModel.storeGithubRepos()
         liveData = viewModel.getListOfGithubRepo()
+    }
 
+    private fun updateUI() {
         liveData.observe(this, Observer {
             if (!liveData.value.isNullOrEmpty()) {
                 githubRepoAdapter.setData(liveData.value!!)
