@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class GitHubRepoModel(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
-    val name: String
+    val name: String,
+    val description: String
 )

@@ -4,8 +4,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.marannix.android.cadence.R
 import com.marannix.android.cadence.model.GitHubRepoModel
@@ -36,7 +34,9 @@ class GithubRepoAdapter : RecyclerView.Adapter<GithubRepoAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(repos: GitHubRepoModel) {
+            itemView.githubRepoId.text = "#${repos.id}"
             itemView.githubRepoName.text = repos.name
+            itemView.githubRepoDescription.text = repos.description
         }
     }
 }
