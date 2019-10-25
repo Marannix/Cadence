@@ -1,5 +1,6 @@
 package com.marannix.android.cadence.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,7 @@ class GithubRepoViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { githubRepoState ->
+                Log.d("state", githubRepoState.toString())
                 handleState(githubRepoState)
             }
         )

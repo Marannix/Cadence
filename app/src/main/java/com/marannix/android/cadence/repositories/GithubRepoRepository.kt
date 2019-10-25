@@ -16,9 +16,6 @@ class GithubRepoRepository @Inject constructor(
 
     private fun getGithubReposFromApi(): Single<List<GitHubRepoModel>> {
         return githubRepoApi.getRepos()
-            .map { it }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
                 storeGithubReposInDb(it)
             }
@@ -30,8 +27,6 @@ class GithubRepoRepository @Inject constructor(
 
     private fun getGithubReposFromDb(): Single<List<GitHubRepoModel>> {
         return githubRepoDao.getGithubRepos()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
     /**
