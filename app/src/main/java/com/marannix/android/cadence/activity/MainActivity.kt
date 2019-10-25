@@ -28,7 +28,7 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(GithubRepoViewModel::class.java)
-        init()
+        //init()
     }
 
     private fun init() {
