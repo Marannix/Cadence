@@ -82,6 +82,7 @@ class GithubRepoFragment : BaseFragment() {
                             }
                             else -> {
                                 displayError()
+                                setReloadButton()
                             }
                         }
                     })
@@ -90,19 +91,26 @@ class GithubRepoFragment : BaseFragment() {
         })
     }
 
-    private fun displaySuccess() {
-        loadingAnimation.visibility = View.GONE
-        errorAnimation.visibility = View.GONE
-    }
-
     private fun displayLoading() {
         loadingAnimation.visibility = View.VISIBLE
         errorAnimation.visibility = View.GONE
+        reloadButton.visibility = View.GONE
+    }
+
+    private fun displaySuccess() {
+        loadingAnimation.visibility = View.GONE
+        errorAnimation.visibility = View.GONE
+        reloadButton.visibility = View.GONE
     }
 
     private fun displayError() {
         loadingAnimation.visibility = View.GONE
         errorAnimation.visibility = View.VISIBLE
+        reloadButton.visibility = View.VISIBLE
+    }
+
+    private fun setReloadButton() {
+
     }
 
 }
