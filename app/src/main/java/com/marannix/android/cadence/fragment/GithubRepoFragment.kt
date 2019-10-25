@@ -51,7 +51,6 @@ class GithubRepoFragment : BaseFragment() {
     }
 
     private fun retrieveGithubRepos() {
-        viewModel.storeGithubRepos()
         liveData = viewModel.getLiveData()
     }
 
@@ -109,8 +108,15 @@ class GithubRepoFragment : BaseFragment() {
         reloadButton.visibility = View.VISIBLE
     }
 
+    /**
+     * The idea is to fetch the github repos again when it fails
+     * The button will only be present when an error occurs and no data has been stored
+     * i.e launching the application the first time without internet connection
+     */
     private fun setReloadButton() {
-
+        reloadButton.setOnClickListener {
+            viewModel.getGithubRepos()
+        }
     }
 
 }

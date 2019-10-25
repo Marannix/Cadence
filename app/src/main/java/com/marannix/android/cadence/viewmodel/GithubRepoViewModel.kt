@@ -19,12 +19,15 @@ class GithubRepoViewModel @Inject constructor(
     private val disposables = CompositeDisposable()
     var state = MutableLiveData<GitHubRepoState>()
 
-    fun storeGithubRepos()  {
+    init {
+        getGithubRepos()
+    }
+
+    fun getGithubRepos()  {
         disposables.add(githubRepoUseCase.handleGitHubRepoState()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { githubRepoState ->
-                Log.d("state", githubRepoState.toString())
                 handleState(githubRepoState)
             }
         )
