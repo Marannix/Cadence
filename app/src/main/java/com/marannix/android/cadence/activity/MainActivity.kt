@@ -16,79 +16,8 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private lateinit var viewModel: GithubRepoViewModel
-    private lateinit var liveData: LiveData<List<GitHubRepoModel>>
-    private lateinit var githubRepoAdapter: GithubRepoAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(GithubRepoViewModel::class.java)
-        //init()
-    }
-
-    private fun init() {
-        retrieveGithubRepos()
-        initAdapter()
-        updateUI()
-    }
-
-    private fun retrieveGithubRepos() {
-        viewModel.storeGithubRepos()
-        liveData = viewModel.getLiveData()
-    }
-
-    private fun initAdapter() {
-        githubRepoAdapter = GithubRepoAdapter()
-        githubRepoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        githubRepoRecyclerView.adapter = githubRepoAdapter
-    }
-
-    private fun updateUI() {
-        viewModel.state.observe(this, Observer {
-            when (it) {
-                GitHubRepoState.Loading -> {
-                    displayLoading()
-                }
-                is GitHubRepoState.Success -> {
-                    displaySuccess()
-                    liveData.observe(this, Observer { model ->
-                        githubRepoAdapter.setData(model)
-                    })
-                }
-                is GitHubRepoState.Error -> {
-                    liveData.observe(this, Observer { model ->
-                        when {
-                            !model.isNullOrEmpty() -> {
-                                displaySuccess()
-                                githubRepoAdapter.setData(model)
-                            }
-                            else -> {
-                                 displayError()
-                            }
-                        }
-                    })
-                }
-            }
-        })
-    }
-
-    private fun displaySuccess() {
-        loadingAnimation.visibility = View.GONE
-        errorAnimation.visibility = View.GONE
-    }
-
-    private fun displayLoading() {
-        loadingAnimation.visibility = View.VISIBLE
-        errorAnimation.visibility = View.GONE
-    }
-
-    private fun displayError() {
-        loadingAnimation.visibility = View.GONE
-        errorAnimation.visibility = View.VISIBLE
     }
 }
