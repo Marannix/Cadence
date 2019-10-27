@@ -10,7 +10,6 @@ import com.marannix.android.cadence.utils.UnitTestUtils.Companion.readJsonFile
 import io.reactivex.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.mockito.Mockito.*
-import retrofit2.HttpException
 
 class GithubRepoRepositoryTest {
 

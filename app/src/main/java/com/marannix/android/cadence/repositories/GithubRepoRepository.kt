@@ -5,7 +5,6 @@ import com.marannix.android.cadence.data.GithubRepoDao
 import com.marannix.android.cadence.model.GitHubRepoModel
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -14,28 +13,35 @@ class GithubRepoRepository @Inject constructor(
     private val githubRepoApi: GithubRepoApi
 ) {
 
-    private fun getGithubReposFromApi(): Single<List<GitHubRepoModel>> {
-        return githubRepoApi.getRepos()
-            .doOnSuccess {
-                storeGithubReposInDb(it)
-            }
-    }
-
-    private fun storeGithubReposInDb(it: List<GitHubRepoModel>) {
-        githubRepoDao.insertGithubRepos(it)
-    }
-
-    private fun getGithubReposFromDb(): Single<List<GitHubRepoModel>> {
-        return githubRepoDao.getGithubRepos()
-    }
-
     /**
      * Chaining request to database and network data source
      */
     fun getGithubRepos(): Flowable<List<GitHubRepoModel>> {
-        return Single.concatArray(
+        return Single.concatArrayEager(
             getGithubReposFromDb(),
             getGithubReposFromApi()
         )
+    }
+
+    private fun getGithubReposFromApi(): Single<List<GitHubRepoModel>> {
+        return githubRepoApi.getRepos()
+            .doOnSuccess {modelList ->
+                storeGithubReposInDb(modelList)
+            }
+    }
+
+    private fun storeGithubReposInDb(list: List<GitHubRepoModel>) {
+        githubRepoDao.insertGithubRepos(list)
+    }
+
+    private fun getGithubReposFromDb(): Single<List<GitHubRepoModel>> {
+        return githubRepoDao.getGithubRepos()
+
+//            .subscribeOn(Schedulers.io())
+    }
+
+    sealed class GitHubRepoDataState {
+        data class Success(val gitHubRepoModel: List<GitHubRepoModel>) : GitHubRepoDataState()
+        data class Error(val cause: Throwable) : GitHubRepoDataState()
     }
 }

@@ -1,11 +1,7 @@
 package com.marannix.android.cadence.usecase
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.marannix.android.cadence.model.GitHubRepoState
-import com.marannix.android.cadence.model.GitHubRepoModel
 import com.marannix.android.cadence.repositories.GithubRepoRepository
-import io.reactivex.Flowable
+import com.marannix.android.cadence.repositories.GithubRepoRepository.GitHubRepoDataState
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -13,22 +9,12 @@ class GithubRepoUseCase @Inject constructor(
     private val githubRepoRepository: GithubRepoRepository
 ) {
 
-    private val liveData = MutableLiveData<List<GitHubRepoModel>>()
-
-    fun handleGitHubRepoState(): Observable<GitHubRepoState> {
-        return getGithubRepos()
-            .toObservable()
-            .startWith(GitHubRepoState.Loading)
-            .onErrorReturn { GitHubRepoState.Error(it) }
-    }
-
-    private fun getGithubRepos(): Flowable<GitHubRepoState> {
+    fun getGithubRepoDataState(): Observable<GitHubRepoDataState> {
         return githubRepoRepository.getGithubRepos()
-            .map {
-                liveData.postValue(it)
-                GitHubRepoState.Success(it)
+            .map<GitHubRepoDataState> { list ->
+                GitHubRepoDataState.Success(list)
             }
+            .toObservable()
+            .onErrorReturn { GitHubRepoDataState.Error(it) }
     }
-
-    fun getLiveData(): LiveData<List<GitHubRepoModel>> = liveData
 }
