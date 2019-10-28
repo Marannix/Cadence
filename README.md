@@ -1,0 +1,23 @@
+# Cadence
+
+### Android Architecture Components and libraries used
+
+```
+- Dagger
+- Room
+- Navigation
+- Retrofit
+- RxJava 
+- Lottie
+- Mockito (Testing)
+- Material
+```
+
+### What does this project do?
+
+Passes the repositories from http://api.github.com/orgs/square/repos and displays the github name and description in a recyclerview. 
+
+
+| Data populated (Online / Offline)| Offline (No data stored in DB) |
+|---|---|
+|![Screenshot_1572256886](https://user-images.githubusercontent.com/15348446/67669508-f6435180-f969-11e9-88cd-1b357a9f5c55.png)|![Screenshot_1572256870](https://user-images.githubusercontent.com/15348446/67669509-f80d1500-f969-11e9-90f5-209476536cfc.png)|
