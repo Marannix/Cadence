@@ -1,6 +1,18 @@
 # Cadence
 
-Using MVVM architecture, ViewModel, LiveData, Dagger and Room and more...
+### Android Architecture Components and libraries used
+
+```
+- Dagger
+- Room
+- Navigation
+- Retrofit
+- RxJava 
+- Lottie
+- Mockito (Testing)
+- Material
+```
+
 
 | Data populated (Online / Offline)| Offline (No data stored in DB) |
 |---|---|
