@@ -4,11 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.marannix.android.cadence.usecase.GithubRepoUseCase
 import com.marannix.android.cadence.model.GitHubRepoModel
-import com.marannix.android.cadence.repositories.GithubRepoRepository
 import com.marannix.android.cadence.repositories.GithubRepoRepository.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class GithubRepoViewModel @Inject constructor(
@@ -16,34 +14,39 @@ class GithubRepoViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
+
     val viewState = MutableLiveData<GithubRepoViewState>()
+    val actionState = MutableLiveData<GithubRepoActionState>()
 
     init {
         getGithubRepos()
     }
 
     fun getGithubRepos() {
-        disposables.add(githubRepoUseCase.getGithubRepoDataState()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { githubDataState ->
-                return@map when (githubDataState) {
-                    is GitHubRepoDataState.Success -> GithubRepoViewState.showGithubRepos(
-                        githubDataState.gitHubRepoModel
-                    )
-
-                    is GitHubRepoDataState.Error ->
-                        if (viewState.value is GithubRepoViewState.showGithubRepos) {
-                            return@map viewState.value
-                        } else {
-                            return@map GithubRepoViewState.showError(githubDataState.cause.message)
+        disposables.add(
+            githubRepoUseCase.getGithubRepoDataState()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { gitHubDataState ->
+                    return@map when (gitHubDataState) {
+                        is GithubRepoDataState.Success -> {
+                            GithubRepoViewState.ShowGithubRepos(gitHubDataState.gitHubRepoModel)
                         }
+                        is GithubRepoDataState.Error -> {
+                            val errorMessage = gitHubDataState.cause.message
+                            actionState.value = GithubRepoActionState.ShowSecondaryError(errorMessage)
+                            if (viewState.value is GithubRepoViewState.ShowGithubRepos) {
+                                viewState.value
+                            } else {
+                                GithubRepoViewState.ShowError(errorMessage)
+                            }
 
+                        }
+                    }
                 }
-            }
-            .subscribe { githubDataState ->
-                viewState.value = githubDataState
-            }
+                .doOnSubscribe { viewState.value = GithubRepoViewState.Loading }
+                .subscribe { viewState ->
+                    this.viewState.value = viewState
+                }
         )
     }
 
@@ -54,7 +57,11 @@ class GithubRepoViewModel @Inject constructor(
 
     sealed class GithubRepoViewState {
         object Loading : GithubRepoViewState()
-        data class showGithubRepos(val gitHubRepoModel: List<GitHubRepoModel>) : GithubRepoViewState()
-        data class showError(val error: String?) : GithubRepoViewState()
+        data class ShowGithubRepos(val gitHubRepoModel: List<GitHubRepoModel>) : GithubRepoViewState()
+        data class ShowError(val errorMessage: String?) : GithubRepoViewState()
+    }
+
+    sealed class GithubRepoActionState {
+        data class ShowSecondaryError(val errorMessage: String?) : GithubRepoActionState()
     }
 }
