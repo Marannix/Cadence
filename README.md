@@ -13,6 +13,10 @@
 - Material
 ```
 
+### What does this project do?
+
+Passes the repositories from http://api.github.com/orgs/square/repos and displays the github name and description in a recyclerview. 
+
 
 | Data populated (Online / Offline)| Offline (No data stored in DB) |
 |---|---|
