@@ -32,7 +32,7 @@ class GithubRepoViewModel @Inject constructor(
                             GithubRepoViewState.ShowGithubRepos(gitHubDataState.gitHubRepoModel)
                         }
                         is GithubRepoDataState.Error -> {
-                            val errorMessage = gitHubDataState.cause.message
+                            val errorMessage = gitHubDataState.errorMessage
                             actionState.value = GithubRepoActionState.ShowSecondaryError(errorMessage)
                             if (viewState.value is GithubRepoViewState.ShowGithubRepos) {
                                 viewState.value

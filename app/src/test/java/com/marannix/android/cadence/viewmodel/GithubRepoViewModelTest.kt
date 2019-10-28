@@ -61,15 +61,7 @@ class GithubRepoViewModelTest {
     }
 
     @Test
-    fun `when network fails and no data stored emit error view state`() {
-        Mockito.`when`(api.getRepos()).thenReturn(Single.error(Throwable("")))
-        Mockito.`when`(dao.getGithubRepos()).thenReturn(Single.just(emptyList()))
-        viewModel.viewState.observeForever { observerState }
-        assertEquals(viewModel.viewState.value, expectedErrorState)
-    }
-
-    @Test
-    fun `when network succeed emit success state`() {
+    fun `when data state success then emit success view state`() {
         Mockito.`when`(api.getRepos()).thenReturn(Single.just(githubrepoResponse))
         Mockito.`when`(dao.getGithubRepos()).thenReturn(Single.just(githubrepoResponse))
         viewModel.viewState.observeForever { observerState }
@@ -77,7 +69,15 @@ class GithubRepoViewModelTest {
     }
 
     @Test
-    fun `when network fails and data exists in database emit success state`() {
+    fun `when data state error then emit error view state`() {
+        Mockito.`when`(api.getRepos()).thenReturn(Single.error(Throwable("")))
+        Mockito.`when`(dao.getGithubRepos()).thenReturn(Single.just(emptyList()))
+        viewModel.viewState.observeForever { observerState }
+        assertEquals(viewModel.viewState.value, expectedErrorState)
+    }
+
+    @Test
+    fun `when network fails, data stored in database and data state is success emit success view state`() {
         Mockito.`when`(api.getRepos()).thenReturn(Single.error(Throwable("")))
         Mockito.`when`(dao.getGithubRepos()).thenReturn(Single.just(githubrepoResponse))
         viewModel.viewState.observeForever { observerState }

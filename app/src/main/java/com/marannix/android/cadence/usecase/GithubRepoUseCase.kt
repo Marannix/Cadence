@@ -14,6 +14,6 @@ class GithubRepoUseCase @Inject constructor(
             .map<GithubRepoDataState> { list ->
                 GithubRepoDataState.Success(list)
             }
-            .onErrorReturn { error -> GithubRepoDataState.Error(error) }
+            .onErrorReturn { error -> GithubRepoDataState.Error(error.message) }
     }
 }

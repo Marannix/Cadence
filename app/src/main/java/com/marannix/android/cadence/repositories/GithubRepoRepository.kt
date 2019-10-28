@@ -48,6 +48,6 @@ class GithubRepoRepository @Inject constructor(
 
     sealed class GithubRepoDataState {
         data class Success(val gitHubRepoModel: List<GitHubRepoModel>) : GithubRepoDataState()
-        data class Error(val cause: Throwable) : GithubRepoDataState()
+        data class Error(val errorMessage: String?) : GithubRepoDataState()
     }
 }
