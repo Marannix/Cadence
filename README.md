@@ -1,0 +1,3 @@
+# Cadence
+
+Using MVVM architecture, ViewModel, LiveData, Dagger and Room and more...
