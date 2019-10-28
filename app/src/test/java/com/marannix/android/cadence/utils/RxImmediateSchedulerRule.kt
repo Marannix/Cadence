@@ -8,7 +8,7 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
 /**
- * Required due to error occurring when unit testing rxjava 
+ * Required due to error occurring when unit testing rxjava
  * Caused by: java.lang.RuntimeException: Method getMainLooper in android.os.Looper not mocked.
  * See http://g.co/androidstudio/not-mocked for details.
  * Reference -> https://medium.com/@dbottillo/how-to-unit-test-your-rxjava-code-in-kotlin-d239364687c9

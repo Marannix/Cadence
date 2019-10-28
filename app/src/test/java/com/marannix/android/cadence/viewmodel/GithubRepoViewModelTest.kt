@@ -75,4 +75,12 @@ class GithubRepoViewModelTest {
         viewModel.viewState.observeForever { observerState }
         assertEquals(viewModel.viewState.value, expectedSuccessState)
     }
+
+    @Test
+    fun `when network fails and data exists in database emit success state`() {
+        Mockito.`when`(api.getRepos()).thenReturn(Single.error(Throwable("")))
+        Mockito.`when`(dao.getGithubRepos()).thenReturn(Single.just(githubrepoResponse))
+        viewModel.viewState.observeForever { observerState }
+        assertEquals(viewModel.viewState.value, expectedSuccessState)
+    }
 }
